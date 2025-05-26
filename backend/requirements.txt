@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+databases
+psycopg2-binary
+pydantic
+APScheduler
+httpx  # for external dictionary lookups

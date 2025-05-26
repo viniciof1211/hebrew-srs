@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  api:
+    build: ./backend
+    container_name: hebrew_api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend/app:/app/app
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: hebrew_frontend
+    volumes:
+      - ./frontend/src:/usr/src/app/src
+    ports:
+      - '3000:3000'
+    command: npm run dev
+    depends_on:
+      - api
+
+  db:
+    image: postgres:14-alpine
+    container_name: hebrew_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vocab_trainer
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
