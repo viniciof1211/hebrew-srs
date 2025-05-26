@@ -2,8 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .models import init_db
 from .services.srs_engine import router as srs_router
+from .services import tts_service
 
 app = FastAPI(title='Hebrew Vocab Trainer API')
+app.include_router(tts_service.router, prefix='/audio', tags=['tts'])
 
 # CORS
 app.add_middleware(
