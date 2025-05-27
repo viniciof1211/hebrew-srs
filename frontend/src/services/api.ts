@@ -1,46 +1,74 @@
 import axios from 'axios';
+import { FlashCard, LookupResult, TokenResponse, User } from '../types';
 
-const API_BASE = 'http://localhost:8000';
-let token: string | null = null;
+// Configure base URL to match Nginx proxy
+const client = axios.create({ baseURL: '/api' });
 
-export const setToken = (t: string) => { token = t; };
+// ----------------------
+// AUTHENTICATION
+// ----------------------
 
-const client = axios.create({
-  baseURL: API_BASE,
-});
-client.interceptors.request.use(config => {
-  if (token) config.headers!['Authorization'] = `Bearer ${token}`;
-  return config;
-});
+export async function login(
+  username: string,
+  password: string
+): Promise<TokenResponse> {
+  const params = new URLSearchParams();
+  params.append('username', username);
+  params.append('password', password);
+  const response = await client.post<TokenResponse>('/auth/token', params);
+  return response.data;
+}
 
-// Auth
-export const login = async (username: string, password: string) => {
-  const { data } = await client.post('/auth/token', new URLSearchParams({ username, password }));
-  setToken(data.access_token);
-  return data;
-};
-export const fetchMe = async () => {
-  const { data } = await client.get('/auth/users/me');
-  return data;
-};
+export async function fetchMe(): Promise<User> {
+  const response = await client.get<User>('/auth/users/me');
+  return response.data;
+}
 
-// Flashcard
-export const fetchDueCards = async (limit = 20) => {
-  const { data } = await client.get('/cards/next', { params: { limit } });
-  return data;
-};
-export const createCard = async (card: any) => {
-  const { data } = await client.post('/cards/create', card);
-  return data;
-};
-export const updateCard = async (cardId: string, correct: boolean) => {
-  const { data } = await client.post('/cards/update', null, { params: { card_id: cardId, correct } });
-  return data;
-};
+// ----------------------
+// FLASHCARD OPERATIONS
+// ----------------------
 
-// TTS & Lookup
-export const lookupWord = async (word: string) => {
-  const { data } = await client.get('/cards/lookup', { params: { word } });
-  return data;
-};
-export const playTTSUrl = (word: string) => `${API_BASE}/audio/tts?word=${encodeURIComponent(word)}`;
+export async function fetchDueCards(
+  limit = 20
+): Promise<FlashCard[]> {
+  const response = await client.get<FlashCard[]>('/cards/next', {
+    params: { limit },
+  });
+  return response.data;
+}
+
+export async function createCard(
+  card: Omit<FlashCard, 'id' | 'next_review'>
+): Promise<FlashCard> {
+  const response = await client.post<FlashCard>('/cards/create', card);
+  return response.data;
+}
+
+export async function updateCard(
+  cardId: string,
+  correct: boolean
+): Promise<{ next_review: string }> {
+  const response = await client.post<{ next_review: string }>(
+    '/cards/update',
+    null,
+    { params: { card_id: cardId, correct } }
+  );
+  return response.data;
+}
+
+// ----------------------
+// LOOKUP & TTS
+// ----------------------
+
+export async function lookupWord(
+  word: string
+): Promise<LookupResult> {
+  const response = await client.get<LookupResult>('/cards/lookup', {
+    params: { word },
+  });
+  return response.data;
+}
+
+export function playTTSUrl(word: string): string {
+  return `/api/audio/tts?word=${encodeURIComponent(word)}`;
+}

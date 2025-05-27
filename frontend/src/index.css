@@ -2,35 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles */
+/* Base Styles */
 @layer base {
-  body {
-    @apply bg-duolingoLight font-sans;
+  html, body {
+    @apply m-0 p-0 h-full;
+    background-color: theme('colors.duolingoLight');
+    font-family: theme('fontFamily.sans');
+  }
+  #root {
+    @apply flex flex-col h-full;
   }
 }
 
+/* Components */
 @layer components {
   .card {
-    @apply bg-cardBg rounded-xl shadow-md p-6 max-w-md mx-auto;
+    @apply bg-cardBg rounded-xl shadow-md p-6 max-w-md mx-auto my-4;
     box-shadow: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
-    --tw-shadow-color: var(--card-shadow, #0000001a);
+    --tw-shadow-color: theme('colors.cardShadow');
   }
   .btn-primary {
-    @apply bg-duolingoGreen text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-500;
+    @apply bg-duolingoGreen text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition;
   }
   .btn-secondary {
-    @apply bg-white text-duolingoGreen border border-duolingoGreen font-medium py-2 px-4 rounded-lg hover:bg-duolingoLight;
+    @apply bg-white text-duolingoGreen border border-duolingoGreen font-medium py-2 px-4 rounded-lg hover:bg-duolingoLight transition;
   }
 }
 
+/* Utilities */
 @layer utilities {
-  .perspective {
-    perspective: 1000px;
-  }
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-  .rotateY-180 {
-    transform: rotateY(180deg);
-  }
+  .perspective { perspective: 1000px; }
+  .backface-hidden { backface-visibility: hidden; }
+  .rotateY-180 { transform: rotateY(180deg); }
 }

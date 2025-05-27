@@ -24,5 +24,6 @@ db = Database(DATABASE_URL)
 
 async def init_db():
     await db.connect()
-    engine = db._backend._pool._dialect.create_engine(DATABASE_URL)
+    from sqlalchemy import create_engine
+    engine = create_engine(DATABASE_URL)
     metadata.create_all(engine)

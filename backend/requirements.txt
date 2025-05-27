@@ -11,3 +11,5 @@ gTTS
 passlib[bcrypt]
 python-jose
 jwt
+bcrypt==4.0.1
+python-multipart
