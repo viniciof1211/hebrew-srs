@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+@layer base {
+  body {
+    @apply bg-duolingoLight font-sans;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-cardBg rounded-xl shadow-md p-6 max-w-md mx-auto;
+    box-shadow: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+    --tw-shadow-color: var(--card-shadow, #0000001a);
+  }
+  .btn-primary {
+    @apply bg-duolingoGreen text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-500;
+  }
+  .btn-secondary {
+    @apply bg-white text-duolingoGreen border border-duolingoGreen font-medium py-2 px-4 rounded-lg hover:bg-duolingoLight;
+  }
+}
+
+@layer utilities {
+  .perspective {
+    perspective: 1000px;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotateY-180 {
+    transform: rotateY(180deg);
+  }
+}
