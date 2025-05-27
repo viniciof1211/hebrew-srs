@@ -1,8 +1,13 @@
 fastapi
 uvicorn[standard]
 SQLAlchemy
+asyncpg
 databases
 psycopg2-binary
 pydantic
 APScheduler
-httpx  # for external dictionary lookups
+httpx
+gTTS
+passlib[bcrypt]
+python-jose
+jwt
