@@ -1,0 +1,32 @@
+🔊 TTS (Text-to-Speech): Hebrew audio synthesized server-side with /tts, played via audio tag in React.
+
+🧿 Auth: JWT-based registration/login wired with React + FastAPI.
+
+📊 Dashboard: User progress and review analytics pulled from backend.
+
+
+### 🎙️ Audio Playback (TTS)
+- `tts_service.py`: Generates audio files using gTTS or Coqui-TTS
+- Frontend `CardReview.tsx`: Play button added to pronounce Hebrew term
+
+feat(audio): backend tts_service.py Generates audio files using gTTS and frontend CardReview.tsx has a Play button added to pronounce Hebrew term (s)
+
+### 🔐 User Authentication
+🧿 Auth: JWT-based registration/login wired with React + FastAPI.
+- `auth.py`: JWT-based login/signup endpoints
+- Secure routes with token-based auth
+- `api.ts`: Auth-aware requests using bearer token
+
+
+
+### 📊 Analytics Dashboard
+- `Dashboard.tsx`: Displays user progress, review stats, streaks
+- Backend aggregates daily/weekly SRS activity, success rates
+
+
+
+
+
+
+
+Next: integrate login UI, or bind protected SRS routes to only allow authenticated users.
