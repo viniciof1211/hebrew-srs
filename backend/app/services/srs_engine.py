@@ -4,6 +4,9 @@ from datetime import datetime, timedelta
 import uuid
 from ..models import db, flashcards
 import httpx
+import unicodedata
+import logging
+# from .models import Flashcard, SessionLocal
 
 router = APIRouter()
 
@@ -22,15 +25,21 @@ class FlashCardOut(FlashCardIn):
     ease_factor: float
     repetitions: int
 
+# Helper Methods
+def normalize_text(text: str) -> str:
+    return unicodedata.normalize('NFC', text)
+
 # SRS Endpoints
 @router.post('/create', response_model=FlashCardOut)
 async def create_card(data: FlashCardIn):
     card_id = str(uuid.uuid4())
     now = datetime.utcnow()
+    wr = normalize_text(data.hebrew_word.strip())
+    tr  = normalize_text(data.translation.strip())
     query = flashcards.insert().values(
         id=card_id,
-        hebrew_word=data.hebrew_word,
-        translation=data.translation,
+        hebrew_word=wr,
+        translation=tr,
         context_sentence=data.context_sentence,
         svg_data=data.svg_data,
         image_url=data.image_url,
@@ -39,7 +48,13 @@ async def create_card(data: FlashCardIn):
         ease_factor=2.5,
         repetitions=0,
     )
-    await db.execute(query)
+    try:
+        logging.basicConfig(filename='hebrew-srs.log', level=logging.INFO)
+        logger = logging.getLogger(__name__)
+        logger.info(f"Inserting: {data.hebrew_word} -> {data.translation}")
+        await db.execute(query)
+    except UnicodeEncodeError:
+        logger.warning(f"Unicode error when logging term: {data.hebrew_word}.")
     record = await db.fetch_one(flashcards.select().where(flashcards.c.id == card_id))
     return record
 
@@ -79,8 +94,14 @@ async def update_card(card_id: str, correct: bool):
 @router.get('/lookup')
 async def lookup_word(word: str):
     # Example: call external Hebrew-English API
+    word = normalize_text(word.strip())
+    url = f"https://lexicala1.p.rapidapi.com/search?text={word}&language=he"
+    headers = {
+        "X-RapidAPI-Key": "YOUR_API_KEY",     # Waiting for lexicala rapidapi approval
+        "X-RapidAPI-Host": "lexicala1.p.rapidapi.com"
+    }
     async with httpx.AsyncClient() as client:
         # placeholder URL
-        resp = await client.get(f'https://api.dictionary.example/lookup?word={word}')
+        resp = await client.get(url, headers=headers)
         data = resp.json()
     return data  # return definitions, examples, audio URLs, SVGs

@@ -13,3 +13,5 @@ python-jose
 jwt
 bcrypt==4.0.1
 python-multipart
+kafka-python>=2.0.2
+langchain>=0.0.162

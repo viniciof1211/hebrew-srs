@@ -18,6 +18,8 @@ export const PracticeModule: React.FC = () => {
     })();
   }, []);
 
+  if (!queue.length) return <p>No sentences due. You&#39;re all caught up!</p>;
+
   const current = queue[0];
   const handleSubmit = async () => {
     const correct = await submitPracticeAttempt(current._id, answer);
@@ -25,20 +27,20 @@ export const PracticeModule: React.FC = () => {
     setAnswer('');
   };
 
-  return current ? (
+  return (
     <div className="card">
-      <p>Translate this sentence:</p>
+      <p className="mb-2">Translate this sentence:</p>
       <p className="mb-4 font-semibold">{current.sentence}</p>
       <input
         className="w-full p-2 border rounded mb-2"
         value={answer}
         onChange={e => setAnswer(e.target.value)}
       />
-      <button onClick={handleSubmit} className="btn-primary">
-        Submit
-      </button>
+      <div className="flex justify-end">
+        <button onClick={handleSubmit} className="btn-primary">
+          Submit
+        </button>
+      </div>
     </div>
-  ) : (
-    <p>No sentences due. You're all caught up!</p>
   );
 };

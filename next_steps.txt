@@ -1,0 +1,8 @@
+- **Debezium + Kafka** to capture new cards via CDC
+- **Practice Engine** in `practice_engine.py` using **LangChain**, **FAISS**, **LangGraph**, **OpenAI API**
+- **MongoDB** to store generated sentences and user attempts
+- **Leitner** scheduling for sentence review
+- **Practice UI** component in React
+
+
+feat(practice module): Introduced - **Debezium + Kafka** to capture new cards via CDC - **Practice Engine** in `practice_engine.py` using **LangChain**, **FAISS**, **LangGraph**, **OpenAI API** - **MongoDB** to store generated sentences and user attempts - **Leitner** scheduling for sentence review - **Practice UI** component in React
